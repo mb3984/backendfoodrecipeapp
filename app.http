@@ -1,0 +1,89 @@
+GET http://localhost:3000/getRecipes
+###
+POST http://localhost:3000/save/recipe
+authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hZGh1QGdtYWlsLmNvbSIsImlkIjoiNjdiMTYzZjQyNGFjMjc4YjkxZTg1ZTRiIiwiaWF0IjoxNzM5NjgyMDEwfQ.xA55_pab65ojsjFmljknGwITmnboGG2iJ22FLWl0ONw
+Content-Type: multipart/form-data; boundary=boundary123
+
+{
+    "title":"lolly pop",
+    "ingredients":"['chicken','chilli powder','salt']",
+    "instructions":"super nice wow",
+    "time":"40min",
+    "coverImage":"Madhu pic.jpeg"
+}
+###
+POST http://localhost:3000/save/recipe
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hZGh1QGdtYWlsLmNvbSIsImlkIjoiNjdiMTYzZjQyNGFjMjc4YjkxZTg1ZTRiIiwiaWF0IjoxNzM5NjgyMDEwfQ.xA55_pab65ojsjFmljknGwITmnboGG2iJ22FLWl0ONw
+Content-Type: multipart/form-data; boundary=boundary123
+
+--boundary123
+Content-Disposition: form-data; name="title"
+
+Lolly Pop
+--boundary123
+Content-Disposition: form-data; name="ingredients"
+
+chicken, chilli powder, salt
+--boundary123
+Content-Disposition: form-data; name="instructions"
+
+Super nice wow
+--boundary123
+Content-Disposition: form-data; name="time"
+
+40min
+--boundary123
+Content-Disposition: form-data; name="coverImage"; filename="Madhu_pic.jpeg"
+Content-Type: image/jpeg
+
+< ./Madhu_pic.jpeg
+--boundary123--
+
+###
+POST http://localhost:3000/recipe
+Content-Type: application/json
+
+{
+    "title":"chicken wings",
+    "ingredients":"['chicken','chilli powder','salt','masala']",
+    "instructions":"super nice wow",
+    "time":"60min"
+}
+###
+GET http://localhost:3000/recipe/67b03bc47baf6ff7d60d859e
+###
+PUT http://localhost:3000/recipe/67b03bc47baf6ff7d60d859e
+Content-Type: application/json
+
+{
+    "title":"Chicken fried wings"
+}
+###
+POST http://localhost:3000/signUp
+Content-Type: application/json
+
+{
+    "email":"madhu@gmail.com",
+    "password":"madhu12"
+}
+###
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "email":"madhu@gmail.com",
+    "password":"madhu12"
+}
+###
+GET http://localhost:3000/user/67b163f424ac278b91e85e4b
+###
+GET http://localhost:3000/getRecipe/67b03b110021fec482dcf45d
+###
+PUT http://localhost:3000/updateRecipe/67b03b110021fec482dcf45d
+Content-Type: application/json
+
+{
+    "title":"Mutton lolly pop"
+}
+###
+DELETE http://localhost:3000/deleteRecipe/67b1bccd329d8947d343985d
