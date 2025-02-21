@@ -16,8 +16,17 @@ const connectDb = async () => {
 };
 connectDb();
 
-app.use(express.json());
+// app.use(express.json());
 app.use(cors());
+// CORS configuration
+const corsOptions = {
+  origin: "http://localhost:5173", // Replace with your frontend's origin
+  methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
+  credentials: true, // Enable cookies and other credentials
+};
+
+// Enable CORS with the specified options
+app.use(cors(corsOptions));
 
 // Parse JSON bodies
 app.use(bodyParser.json());
