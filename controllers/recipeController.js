@@ -53,9 +53,17 @@ const addRecipe = async (req, res) => {
       return res.status(400).json({ message: "Cover image is required!" });
     }
 
+    // Fix ingredients parsing (ensure it's stored as an array)
+    let ingredientsArray;
+    if (typeof req.body.ingredients === "string") {
+      ingredientsArray = req.body.ingredients.split(",");
+    } else {
+      ingredientsArray = req.body.ingredients;
+    }
+
     const newRecipe = await Recipes.create({
       title: req.body.title,
-      ingredients: req.body.ingredients,
+      ingredients: ingredientsArray, // Store as an array
       instructions: req.body.instructions,
       time: req.body.time,
       coverImage: req.file.filename, // Store only filename
@@ -65,7 +73,7 @@ const addRecipe = async (req, res) => {
     console.log("Recipe added successfully:", newRecipe);
     return res
       .status(201)
-      .json({ message: "Recipe added successfully", newRecipe });
+      .json({ message: "Recipe added successfully ", newRecipe });
   } catch (error) {
     console.error("Error adding recipe:", error);
     return res.status(500).json({ message: "Internal Server Error" });

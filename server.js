@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 const connectDb = async () => {
   try {
     await mongoose.connect(process.env.CONNECTION_STRING);
-    console.log("connected to MongoDB...");
+    console.log("connected to MongoDB....");
   } catch (error) {
     console.error("Database connection failed:", error.message);
   }
