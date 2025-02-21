@@ -86,32 +86,32 @@ const addRecipe = async (req, res) => {
 };
 
 const editRecipe = async (req, res) => {
-  const { title, ingredients, instructions, time } = req.body;
-  let recipe = await Recipes.findById(req.params.id);
-
   try {
-    if (recipe) {
-      let coverImage = req.file?.filename
-        ? req.file?.filename
-        : recipe.coverImage;
-      await Recipes.findByIdAndUpdate(
-        req.params.id,
-        { ...req.body, coverImage },
-        { new: true }
-      );
-      console.log(
-        "recipe edited succesfully",
-        title,
-        ingredients,
-        instructions,
-        time
-      );
-      res.json({ title, ingredients, instructions, time });
+    const { title, ingredients, instructions, time } = req.body;
+    let recipe = await Recipes.findById(req.params.id);
+
+    if (!recipe) {
+      return res.status(404).json({ message: "Recipe not found" });
     }
+
+    let coverImage = req.file?.filename ? req.file.filename : recipe.coverImage;
+    const updatedRecipe = await Recipes.findByIdAndUpdate(
+      req.params.id,
+      { ...req.body, coverImage },
+      { new: true }
+    );
+
+    console.log("Recipe edited successfully:", updatedRecipe);
+
+    res.json(updatedRecipe);
   } catch (err) {
-    return res.status(404).json({ message: err });
+    console.error("Error updating recipe:", err);
+    return res
+      .status(500)
+      .json({ message: "Error updating recipe", error: err });
   }
 };
+
 const deleteRecipe = async (req, res) => {
   try {
     const id = req.params.id; // Get ID from URL
