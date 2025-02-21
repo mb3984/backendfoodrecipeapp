@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -17,6 +18,12 @@ connectDb();
 
 app.use(express.json());
 app.use(cors());
+
+// Parse JSON bodies
+app.use(bodyParser.json());
+
+// Parse URL-encoded bodies
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
 
 // ✅ Ensure API routes are registered BEFORE the catch-all route
