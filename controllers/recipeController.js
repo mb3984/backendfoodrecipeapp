@@ -53,30 +53,35 @@ const addRecipe = async (req, res) => {
       return res.status(400).json({ message: "Cover image is required!" });
     }
 
-    // Fix ingredients parsing (ensure it's stored as an array)
+    // Ensure ingredients are parsed as an array
     let ingredientsArray;
-    if (typeof req.body.ingredients === "string") {
-      ingredientsArray = req.body.ingredients.split(",");
-    } else {
-      ingredientsArray = req.body.ingredients;
+    try {
+      ingredientsArray = Array.isArray(req.body.ingredients)
+        ? req.body.ingredients
+        : JSON.parse(req.body.ingredients || "[]");
+    } catch (parseError) {
+      console.error("Error parsing ingredients:", parseError);
+      return res.status(400).json({ message: "Invalid ingredients format" });
     }
 
     const newRecipe = await Recipes.create({
       title: req.body.title,
-      ingredients: ingredientsArray, // Store as an array
+      ingredients: ingredientsArray, // Store array correctly
       instructions: req.body.instructions,
       time: req.body.time,
-      coverImage: req.file.filename, // Store only filename
+      coverImage: req.file.filename,
       createdBy: req.user?.id || "unknown",
     });
 
     console.log("Recipe added successfully:", newRecipe);
     return res
       .status(201)
-      .json({ message: "Recipe added successfully ", newRecipe });
+      .json({ message: "Recipe added successfully", newRecipe });
   } catch (error) {
     console.error("Error adding recipe:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    return res
+      .status(500)
+      .json({ message: error.message || "Internal Server Error" });
   }
 };
 
