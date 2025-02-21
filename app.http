@@ -1,4 +1,4 @@
-GET http://localhost:3000/getRecipes
+GET http://localhost:3000/recipes
 ###
 POST http://localhost:3000/save/recipe
 authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hZGh1QGdtYWlsLmNvbSIsImlkIjoiNjdiMTYzZjQyNGFjMjc4YjkxZTg1ZTRiIiwiaWF0IjoxNzM5NjgyMDEwfQ.xA55_pab65ojsjFmljknGwITmnboGG2iJ22FLWl0ONw
@@ -86,4 +86,4 @@ Content-Type: application/json
     "title":"Mutton lolly pop"
 }
 ###
-DELETE http://localhost:3000/deleteRecipe/67b1bccd329d8947d343985d
+DELETE http://localhost:3000/recipe/67b83dd632d5af690f289018

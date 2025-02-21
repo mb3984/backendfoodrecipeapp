@@ -114,18 +114,19 @@ const editRecipe = async (req, res) => {
 
 const deleteRecipe = async (req, res) => {
   try {
-    const id = req.params.id; // Get ID from URL
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid ID format" });
+    }
     const result = await Recipes.deleteOne({ _id: id });
-
     if (result.deletedCount === 0) {
       return res.status(404).json({ message: "Recipe not found" });
     }
-
     console.log("Recipe deleted successfully:", id);
     res.json({ message: "Deleted successfully", status: "ok" });
   } catch (err) {
     console.error("Error deleting recipe:", err);
-    return res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
