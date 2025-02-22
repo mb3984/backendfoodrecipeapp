@@ -40,7 +40,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ✅ Ensure API routes are registered BEFORE the catch-all route
-app.use("/users", require("./routes/user"));
+app.use("/", require("./routes/user"));
 app.use("/", require("./routes/recipe")); // ✅ Corrected base route
 
 // ✅ Move this to the end to avoid overriding API routes
