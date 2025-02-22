@@ -1,4 +1,4 @@
-GET http://localhost:3000/recipes
+GET http://localhost:3000/getAll
 ###
 POST http://localhost:3000/save/recipe
 authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hZGh1QGdtYWlsLmNvbSIsImlkIjoiNjdiMTYzZjQyNGFjMjc4YjkxZTg1ZTRiIiwiaWF0IjoxNzM5NjgyMDEwfQ.xA55_pab65ojsjFmljknGwITmnboGG2iJ22FLWl0ONw

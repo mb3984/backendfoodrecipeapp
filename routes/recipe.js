@@ -36,9 +36,9 @@ const verifyToken = require("../middleware/auth");
 const router = express.Router();
 
 router.get("/getAll", getRecipes); // Get all recipes
-router.get("/get:id", getRecipe); // Get recipe by ID
+router.get("/get/:id", getRecipe); // Get recipe by ID
 router.post("/post", upload.single("coverImage"), verifyToken, addRecipe); // Add recipe
-router.put("/update:id", upload.single("coverImage"), verifyToken, editRecipe); // Edit recipe
-router.delete("/delete:id", verifyToken, deleteRecipe); // Delete recipe
+router.put("/update/:id", upload.single("coverImage"), verifyToken, editRecipe); // Edit recipe
+router.delete("/delete/:id", verifyToken, deleteRecipe); // Delete recipe
 
 module.exports = router;
