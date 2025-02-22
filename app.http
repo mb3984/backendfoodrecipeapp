@@ -77,7 +77,7 @@ Content-Type: application/json
 ###
 GET http://localhost:3000/user/67b163f424ac278b91e85e4b
 ###
-GET http://localhost:3000/getRecipe/67b03b110021fec482dcf45d
+GET http://localhost:3000/recipe/67b83dd632d5af690f289018
 ###
 PUT http://localhost:3000/updateRecipe/67b03b110021fec482dcf45d
 Content-Type: application/json
@@ -87,3 +87,4 @@ Content-Type: application/json
 }
 ###
 DELETE http://localhost:3000/recipe/67b83dd632d5af690f289018
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hZGh1QGdtYWlsLmNvbSIsImlkIjoiNjdiNDY4MjA1NGRhYjg1MjU0OTZjNmU5IiwiaWF0IjoxNzQwMTI5OTcxfQ.ZIg6z-sCNLi6ORj9rTlzUgP4OimLZ6Yr_-x7VowxXWI
