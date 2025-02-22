@@ -115,15 +115,35 @@ const editRecipe = async (req, res) => {
 const deleteRecipe = async (req, res) => {
   try {
     const { id } = req.params;
+
+    console.log("Received DELETE request for ID:", id);
+
+    // Validate MongoDB ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid ID format" });
     }
+
+    // Ensure MongoDB connection is active
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(500).json({ message: "Database not connected" });
+    }
+
+    // Check if the recipe exists
+    const recipe = await Recipes.findById(id);
+    if (!recipe) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
+
+    // Delete recipe
     const result = await Recipes.deleteOne({ _id: id });
+
     if (result.deletedCount === 0) {
       return res.status(404).json({ message: "Recipe not found" });
     }
+
     console.log("Recipe deleted successfully:", id);
     res.json({ message: "Deleted successfully", status: "ok" });
+
   } catch (err) {
     console.error("Error deleting recipe:", err);
     res.status(500).json({ message: "Internal server error" });
