@@ -7,27 +7,29 @@ const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const recipeRoutes = require("./routes/recipeRoutes");
+const recipeRoutes = require("./routes/recipe"); // ✅ Fixed import
+const recipeRoutesAlt = require("./routes/recipeRoutes"); // ✅ Renamed to avoid conflict
 const userRoutes = require("./routes/user");
 
+// ✅ Connect to MongoDB
 const connectDb = async () => {
   try {
-    await mongoose.connect(process.env.CONNECTION_STRING); // ✅ Remove deprecated options
+    await mongoose.connect(process.env.CONNECTION_STRING);
     console.log("✅ Connected to MongoDB...");
   } catch (error) {
     console.error("❌ Database connection failed:", error.message);
-    process.exit(1); // Exit on failure
+    process.exit(1);
   }
 };
 connectDb();
 
-// ✅ Configure CORS properly
+// ✅ Configure CORS
 const corsOptions = {
-  origin: "*", // Replace with frontend origin if needed
+  origin: "*", // Change to frontend URL for security
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
-app.use(cors(corsOptions)); // ✅ Use only one CORS middleware
+app.use(cors(corsOptions));
 
 // ✅ Middleware
 app.use(bodyParser.json());
@@ -37,9 +39,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ✅ Register API Routes
-app.use("/recipes", recipeRoutes);
-app.use("/recipes", recipe);
-app.use("/", userRoutes);
+app.use("/recipes", recipeRoutes); // Handles routes like `/recipes/post`
+app.use("/api/recipes", recipeRoutesAlt); // Handles `/api/recipes/add`
+app.use("/user", userRoutes); // Use `/user/signUp` instead of `/signUp`
 
 // ✅ Root Route
 app.get("/", (req, res) => {
