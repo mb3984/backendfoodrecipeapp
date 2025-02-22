@@ -37,10 +37,10 @@ app.use("/uploads", express.static("uploads"));
 
 // ✅ Ensure API routes are registered BEFORE the catch-all route
 app.use("/users", require("./routes/user"));
-app.use("/recipes", require("./routes/recipe")); // ✅ Corrected base route
+app.use("/", require("./routes/recipe")); // ✅ Corrected base route
 
 // ✅ Move this to the end to avoid overriding API routes
-app.get("/", (req, res) => {
+app.get("/a", (req, res) => {
   res.send("Welcome to backend food recipe app");
 });
 
