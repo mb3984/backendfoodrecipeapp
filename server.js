@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
+const recipeRoutes = require("./routes/recipeRoutes");
 
 const connectDb = async () => {
   try {
@@ -31,6 +32,7 @@ app.use(cors(corsOptions));
 
 // Parse JSON bodies
 app.use(bodyParser.json());
+app.use("/recipes", recipeRoutes);
 
 // Parse URL-encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
