@@ -4,52 +4,48 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const path = require("path");
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const recipeRoutes = require("./routes/recipeRoutes");
+const userRoutes = require("./routes/user");
 
 const connectDb = async () => {
   try {
-    await mongoose.connect(process.env.CONNECTION_STRING);
-    console.log("Connected to MongoDB...");
+    await mongoose.connect(process.env.CONNECTION_STRING); // ✅ Remove deprecated options
+    console.log("✅ Connected to MongoDB...");
   } catch (error) {
-    console.error("DataBase connection failed :", error.message);
+    console.error("❌ Database connection failed:", error.message);
+    process.exit(1); // Exit on failure
   }
 };
 connectDb();
 
-// app.use(express.json());
-app.use(cors());
-// CORS configuration
+// ✅ Configure CORS properly
 const corsOptions = {
-  origin: "*", // Replace with your frontend's origin
-  methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
-  credentials: true, // Enable cookies and other credentials
+  origin: "*", // Replace with frontend origin if needed
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
 };
+app.use(cors(corsOptions)); // ✅ Use only one CORS middleware
 
-// Enable CORS with the specified options
-app.use(cors(corsOptions));
-
-// Parse JSON bodies
+// ✅ Middleware
 app.use(bodyParser.json());
-app.use("/recipes", recipeRoutes);
-
-// Parse URL-encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use("/uploads", express.static("uploads"));
 
-// 🔥 Serve uploaded images correctly
+// ✅ Serve static files (uploads)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// ✅ Ensure API routes are registered BEFORE the catch-all route
-app.use("/", require("./routes/user"));
-app.use("/", require("./routes/recipe")); // ✅ Corrected base route
+// ✅ Register API Routes
+app.use("/recipes", recipeRoutes);
+app.use("/", userRoutes);
 
-// ✅ Move this to the end to avoid overriding API routes
-app.get("/a", (req, res) => {
-  res.send("Welcome to backend food recipe app");
+// ✅ Root Route
+app.get("/", (req, res) => {
+  res.send("Welcome to the backend food recipe app");
 });
 
+// ✅ Start Server
 app.listen(PORT, () => {
-  console.log(`Server running on PORT:${PORT}`);
+  console.log(`🚀 Server running on PORT: ${PORT}`);
 });

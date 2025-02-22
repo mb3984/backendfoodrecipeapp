@@ -12,7 +12,7 @@ Content-Type: multipart/form-data; boundary=boundary123
     "coverImage":"Madhu pic.jpeg"
 }
 ###
-POST http://localhost:3000/save/recipe
+POST http://localhost:3000/post
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hZGh1QGdtYWlsLmNvbSIsImlkIjoiNjdiMTYzZjQyNGFjMjc4YjkxZTg1ZTRiIiwiaWF0IjoxNzM5NjgyMDEwfQ.xA55_pab65ojsjFmljknGwITmnboGG2iJ22FLWl0ONw
 Content-Type: multipart/form-data; boundary=boundary123
 

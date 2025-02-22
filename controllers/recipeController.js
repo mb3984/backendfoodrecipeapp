@@ -36,7 +36,6 @@ const getRecipe = async (req, res) => {
   res.json(recipe);
 };
 
-// const addRecipe = async (req, res) => {
 //   try {
 //     console.log("Received Body:", req.body);
 //     console.log("Received File:", req.file);
@@ -86,17 +85,69 @@ const getRecipe = async (req, res) => {
 //   }
 // };
 
+// const addRecipe = async (req, res) => {
+//   try {
+//     console.log("Received Body:", req.body);
+//     console.log("Received File:", req.file);
+
+//     if (
+//       !req.body.title ||
+//       !req.body.ingredients ||
+//       !req.body.instructions ||
+//       !req.body.time
+//     ) {
+//       return res.status(400).json({ message: "All fields are required!" });
+//     }
+
+//     if (!req.file) {
+//       return res.status(400).json({ message: "Cover image is required!" });
+//     }
+
+//     // Ensure ingredients are parsed as an array
+//     let ingredientsArray;
+//     try {
+//       ingredientsArray = Array.isArray(req.body.ingredients)
+//         ? req.body.ingredients
+//         : JSON.parse(req.body.ingredients || "[]");
+//     } catch (parseError) {
+//       console.error("Error parsing ingredients:", parseError);
+//       return res.status(400).json({ message: "Invalid ingredients format" });
+//     }
+
+//     // Store full image URL instead of just the filename
+//     const coverImageURL = `${req.protocol}://${req.get("host")}/uploads/${
+//       req.file.filename
+//     }`;
+
+//     const newRecipe = await Recipes.create({
+//       title: req.body.title,
+//       ingredients: ingredientsArray, // Store array correctly
+//       instructions: req.body.instructions,
+//       time: req.body.time,
+//       coverImage: coverImageURL, // Store full URL
+//       createdBy: req.user?.id || "unknown",
+//     });
+
+//     console.log("✅ Recipe added successfully:", newRecipe);
+//     return res
+//       .status(201)
+//       .json({ message: "Recipe added successfully", newRecipe });
+//   } catch (error) {
+//     console.error("❌ Error adding recipe:", error);
+//     return res
+//       .status(500)
+//       .json({ message: error.message || "Internal Server Error" });
+//   }
+// };
+
 const addRecipe = async (req, res) => {
   try {
-    console.log("Received Body:", req.body);
-    console.log("Received File:", req.file);
+    console.log("📥 Received Request - Body:", req.body);
+    console.log("🖼️ Received File:", req.file);
 
-    if (
-      !req.body.title ||
-      !req.body.ingredients ||
-      !req.body.instructions ||
-      !req.body.time
-    ) {
+    // Validate required fields
+    const { title, ingredients, instructions, time } = req.body;
+    if (!title || !ingredients || !instructions || !time) {
       return res.status(400).json({ message: "All fields are required!" });
     }
 
@@ -104,28 +155,31 @@ const addRecipe = async (req, res) => {
       return res.status(400).json({ message: "Cover image is required!" });
     }
 
-    // Ensure ingredients are parsed as an array
+    // Parse ingredients safely
     let ingredientsArray;
-    try {
-      ingredientsArray = Array.isArray(req.body.ingredients)
-        ? req.body.ingredients
-        : JSON.parse(req.body.ingredients || "[]");
-    } catch (parseError) {
-      console.error("Error parsing ingredients:", parseError);
-      return res.status(400).json({ message: "Invalid ingredients format" });
+    if (typeof ingredients === "string") {
+      try {
+        ingredientsArray = JSON.parse(ingredients);
+      } catch (err) {
+        console.error("❌ Error parsing ingredients:", err);
+        return res.status(400).json({ message: "Invalid ingredients format" });
+      }
+    } else {
+      ingredientsArray = ingredients;
     }
 
-    // Store full image URL instead of just the filename
+    // Store full image URL
     const coverImageURL = `${req.protocol}://${req.get("host")}/uploads/${
       req.file.filename
     }`;
 
+    // Create recipe
     const newRecipe = await Recipes.create({
-      title: req.body.title,
-      ingredients: ingredientsArray, // Store array correctly
-      instructions: req.body.instructions,
-      time: req.body.time,
-      coverImage: coverImageURL, // Store full URL
+      title,
+      ingredients: ingredientsArray,
+      instructions,
+      time,
+      coverImage: coverImageURL,
       createdBy: req.user?.id || "unknown",
     });
 
@@ -141,6 +195,33 @@ const addRecipe = async (req, res) => {
   }
 };
 
+// const editRecipe = async (req, res) => {
+//   try {
+//     const { title, ingredients, instructions, time } = req.body;
+//     let recipe = await Recipes.findById(req.params.id);
+
+//     if (!recipe) {
+//       return res.status(404).json({ message: "Recipe not found" });
+//     }
+
+//     let coverImage = req.file?.filename ? req.file.filename : recipe.coverImage;
+//     const updatedRecipe = await Recipes.findByIdAndUpdate(
+//       req.params.id,
+//       { ...req.body, coverImage },
+//       { new: true }
+//     );
+
+//     console.log("Recipe edited successfully:", updatedRecipe);
+
+//     res.json(updatedRecipe);
+//   } catch (err) {
+//     console.error("Error updating recipe:", err);
+//     return res
+//       .status(500)
+//       .json({ message: "Error updating recipe", error: err });
+//   }
+// };
+
 const editRecipe = async (req, res) => {
   try {
     const { title, ingredients, instructions, time } = req.body;
@@ -150,18 +231,39 @@ const editRecipe = async (req, res) => {
       return res.status(404).json({ message: "Recipe not found" });
     }
 
-    let coverImage = req.file?.filename ? req.file.filename : recipe.coverImage;
+    let ingredientsArray;
+    try {
+      ingredientsArray = Array.isArray(ingredients)
+        ? ingredients
+        : JSON.parse(ingredients || "[]");
+    } catch (parseError) {
+      console.error("Error parsing ingredients:", parseError);
+      return res.status(400).json({ message: "Invalid ingredients format" });
+    }
+
+    let coverImage = recipe.coverImage;
+    if (req.file) {
+      coverImage = `${req.protocol}://${req.get("host")}/uploads/${
+        req.file.filename
+      }`;
+    }
+
     const updatedRecipe = await Recipes.findByIdAndUpdate(
       req.params.id,
-      { ...req.body, coverImage },
+      {
+        title,
+        ingredients: ingredientsArray,
+        instructions,
+        time,
+        coverImage,
+      },
       { new: true }
     );
 
-    console.log("Recipe edited successfully:", updatedRecipe);
-
-    res.json(updatedRecipe);
+    console.log("✅ Recipe updated successfully:", updatedRecipe);
+    res.json({ message: "Recipe updated successfully", updatedRecipe });
   } catch (err) {
-    console.error("Error updating recipe:", err);
+    console.error("❌ Error updating recipe:", err);
     return res
       .status(500)
       .json({ message: "Error updating recipe", error: err });
