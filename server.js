@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -33,7 +34,10 @@ app.use(bodyParser.json());
 
 // Parse URL-encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use("/uploads", express.static("uploads"));
+// app.use("/uploads", express.static("uploads"));
+
+// 🔥 Serve uploaded images correctly
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ✅ Ensure API routes are registered BEFORE the catch-all route
 app.use("/users", require("./routes/user"));
