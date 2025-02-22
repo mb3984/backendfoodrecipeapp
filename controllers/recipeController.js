@@ -1,6 +1,7 @@
 const multer = require("multer");
 const path = require("path");
 const Recipes = require("../models/recipeModel");
+const mongoose = require("mongoose");
 
 // Storage setup
 const storage = multer.diskStorage({
@@ -115,38 +116,42 @@ const editRecipe = async (req, res) => {
 const deleteRecipe = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log("➡️ Received DELETE request for ID:", id); // ✅ Log request received
 
-    console.log("Received DELETE request for ID:", id);
-
-    // Validate MongoDB ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
+      console.log("❌ Invalid ObjectId received:", id);
       return res.status(400).json({ message: "Invalid ID format" });
     }
 
-    // Ensure MongoDB connection is active
+    console.log("✅ ObjectId is valid. Checking database connection...");
     if (mongoose.connection.readyState !== 1) {
+      console.log("❌ Database is not connected!");
       return res.status(500).json({ message: "Database not connected" });
     }
 
-    // Check if the recipe exists
+    console.log("✅ Database connected. Checking if recipe exists...");
     const recipe = await Recipes.findById(id);
     if (!recipe) {
+      console.log("❌ Recipe not found in database!");
       return res.status(404).json({ message: "Recipe not found" });
     }
 
-    // Delete recipe
+    console.log("✅ Recipe found! Proceeding to delete...");
     const result = await Recipes.deleteOne({ _id: id });
+    console.log("🗑️ Delete result:", result);
 
     if (result.deletedCount === 0) {
+      console.log("❌ No recipe was deleted.");
       return res.status(404).json({ message: "Recipe not found" });
     }
 
-    console.log("Recipe deleted successfully:", id);
+    console.log("✅ Recipe deleted successfully:", id);
     res.json({ message: "Deleted successfully", status: "ok" });
-
   } catch (err) {
-    console.error("Error deleting recipe:", err);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("❌ Error deleting recipe:", err);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: err.message });
   }
 };
 
