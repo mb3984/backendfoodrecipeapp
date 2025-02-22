@@ -21,7 +21,7 @@ connectDb();
 app.use(cors());
 // CORS configuration
 const corsOptions = {
-  origin: "http://localhost:5173", // Replace with your frontend's origin
+  origin: "http://localhost:5174", // Replace with your frontend's origin
   methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
   credentials: true, // Enable cookies and other credentials
 };
