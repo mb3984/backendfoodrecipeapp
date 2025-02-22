@@ -38,6 +38,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ✅ Register API Routes
 app.use("/recipes", recipeRoutes);
+app.use("/recipes", recipe);
 app.use("/", userRoutes);
 
 // ✅ Root Route

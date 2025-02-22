@@ -86,3 +86,48 @@ Content-Type: application/json
 ###
 DELETE http://localhost:3000/delete/67b8684951d73c917003e2b5
 Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hZGh1QGdtYWlsLmNvbSIsImlkIjoiNjdiNDY4MjA1NGRhYjg1MjU0OTZjNmU5IiwiaWF0IjoxNzQwMTI5OTcxfQ.ZIg6z-sCNLi6ORj9rTlzUgP4OimLZ6Yr_-x7VowxXWI
+###
+POST http://localhost:3000/signUp
+Content-Type: application/json
+
+{
+    "email":"madhu@gmail.com",
+    "password":"madhu12",
+
+}
+###
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "email":"madhu@gmail.com",
+    "password":"madhu12"
+}
+###
+POST http://localhost:3000/recipes/post
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hZGh1QGdtYWlsLmNvbSIsImlkIjoiNjdiMTYzZjQyNGFjMjc4YjkxZTg1ZTRiIiwiaWF0IjoxNzM5NjgyMDEwfQ.xA55_pab65ojsjFmljknGwITmnboGG2iJ22FLWl0ONw
+Content-Type: multipart/form-data; boundary=boundary123
+
+--boundary123
+Content-Disposition: form-data; name="title"
+
+Lolly Pop
+--boundary123
+Content-Disposition: form-data; name="ingredients"
+
+chicken, chilli powder, salt
+--boundary123
+Content-Disposition: form-data; name="instructions"
+
+Super nice wow
+--boundary123
+Content-Disposition: form-data; name="time"
+
+40min
+--boundary123
+Content-Disposition: form-data; name="coverImage"; filename="Madhu_pic.jpeg"
+Content-Type: image/jpeg
+
+< ./Madhu_pic.jpeg
+--boundary123--
+
